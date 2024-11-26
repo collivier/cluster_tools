@@ -79,7 +79,7 @@ module ClusterTools
     cluster_tools_pod_name = pods[0].dig?("metadata", "name") if pods[0]?
     Log.info { "cluster_tools_pod_name: #{cluster_tools_pod_name}"}
 
-    cmd = "-ti #{cluster_tools_pod_name} -- #{cli}"
+    cmd = "#{cluster_tools_pod_name} -- #{cli}"
     KubectlClient.exec(cmd, namespace: self.namespace!)
   end
 
@@ -92,7 +92,7 @@ module ClusterTools
     cluster_tools_pod_name = pods[0].dig?("metadata", "name") if pods[0]?
     Log.debug { "cluster_tools_pod_name: #{cluster_tools_pod_name}"}
 
-    full_cli = "-ti #{cluster_tools_pod_name} -- #{cli}"
+    full_cli = "#{cluster_tools_pod_name} -- #{cli}"
     Log.debug { "ClusterTools exec full cli: #{full_cli}" }
     return full_cli
   end
@@ -243,7 +243,7 @@ module ClusterTools
 
   # https://windsock.io/explaining-docker-image-ids/
   # works on dockerhub and quay!
-  # ex. kubectl exec -ti cluster-tools-ww9lg -- skopeo inspect docker://jaegertracing/jaeger-agent:1.28.0
+  # ex. kubectl exec cluster-tools-ww9lg -- skopeo inspect docker://jaegertracing/jaeger-agent:1.28.0
   # Accepts org/image:tag or repo/org/image:tag
   # A content digest is an uncompressed digest, which is what Kubernetes tracks 
   def self.official_content_digest_by_image_name(image_name)
