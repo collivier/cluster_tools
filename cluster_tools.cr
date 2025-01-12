@@ -249,7 +249,7 @@ module ClusterTools
   def self.official_content_digest_by_image_name(image_name)
     Log.info { "official_content_digest_by_image_name: #{image_name}"}
 
-    result = exec("skopeo inspect docker://#{image_name}")
+    result = exec("skopeo inspect docker://#{image_name}".gsub("docker.io/", "mirror.gcr.io/")
     response = result[:output]
     if result[:status].success? && !response.empty?
       return JSON.parse(response)
