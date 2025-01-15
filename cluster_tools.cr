@@ -250,12 +250,13 @@ module ClusterTools
     Log.info { "official_content_digest_by_image_name: #{image_name}"}
 
     if ENV["DOCKERHUB_USERNAME"]? && ENV["DOCKERHUB_PASSWORD"]?
-      Log.info { "Use USERNAME and PASSWORD for accessing the registry via skopeo" }
-      result = exec("skopeo inspect --creds #{ENV["DOCKERHUB_USERNAME"]}:#{ENV["DOCKERHUB_PASSWORD"]} docker://#{image_name}")
+      Log.info { "Using USERNAME and PASSWORD for accessing the registry via skopeo" }
+      registry_creds = "--creds #{ENV["DOCKERHUB_USERNAME"]}:#{ENV["DOCKERHUB_PASSWORD"]}"
     else
       Log.info { "Access the registry anonymously via skopeo" }
-      result = exec("skopeo inspect docker://#{image_name}")
+      registry_creds = ""
     end
+    result = exec("skopeo inspect #{registry_creds} docker://#{image_name}")
     response = result[:output]
     if result[:status].success? && !response.empty?
       return JSON.parse(response)
